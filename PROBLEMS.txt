@@ -1,0 +1,4 @@
+If glassfish fails:
+java.lang.NoSuchMethodError: org.apache.commons.codec.binary.Base64.encodeBase64URLSafe([B)[B
+
+copy commons-codec-1.4.jar from the /WEB-INF/lib directory  to the glassfishv3/glassfish/modules and also delete commons-codec-repackaged.jar in a glassfishv3/glassfish/modules folder
