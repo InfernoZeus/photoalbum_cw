@@ -6,38 +6,38 @@ var ALBUM_LENGTH = window.opener.ALBUM_LENGTH;
 
 
 function onLoad(){
-  var div = document.getElementById('div0')
-  window.opener.changeImage(_currentImage, div, 750);  
+    var div = document.getElementById('div0')
+    window.opener.changeImage(_currentImage, div, 750);  
 }
 
 function playSlideshow(){
 
-  if(_currentImage == ALBUM_LENGTH - 1 || _playing) return false;
+    if(_currentImage == ALBUM_LENGTH - 1 || _playing) return false;
   
-  if(_slideshowPlaying) {
-    stopSlideshow();
-    return false;
-  }
+    if(_slideshowPlaying) {
+        stopSlideshow();
+        return false;
+    }
   
-  _slideshowPlaying = true;
-  document.getElementById('play').src='stop.gif';
-  _slideshowInterval = setInterval("nextSlide()", 2000);
+    _slideshowPlaying = true;
+    document.getElementById('play').src='stop.gif';
+    _slideshowInterval = setInterval("nextSlide()", 2000);
 }
 
 function nextSlide(){
 
-  if(_currentImage == ALBUM_LENGTH - 1){
-    stopSlideshow();
-    return false;
-  }  
-  nextPage();
+    if(_currentImage == ALBUM_LENGTH - 1){
+        stopSlideshow();
+        return false;
+    }  
+    nextPage();
 }
 
 function stopSlideshow(){
 
-  _slideshowPlaying = false;
-  clearInterval(_slideshowInterval);
-  document.getElementById('play').src='play.gif';
+    _slideshowPlaying = false;
+    clearInterval(_slideshowInterval);
+    document.getElementById('play').src='play.gif';
 }
 
 
@@ -48,98 +48,100 @@ function stopSlideshow(){
 
 function nextPage(){
 
-  if(_currentImage == ALBUM_LENGTH - 1  || _playing) 
-    return false;
+    if(_currentImage == ALBUM_LENGTH - 1  || _playing) 
+        return false;
   
-  var slideDiv0 = document.getElementById('div0');
-  var slideDiv1 = document.getElementById('div1'); 
+    var slideDiv0 = document.getElementById('div0');
+    var slideDiv1 = document.getElementById('div1'); 
 
-  window.opener.changeImage(++_currentImage, slideDiv1, 750);
-  startSlide(slideDiv0,"up");
+    window.opener.changeImage(++_currentImage, slideDiv1, 750);
+    startSlide(slideDiv0,"up");
 }
 
 function lastPage(){
   
-  stopSlideshow();
+    stopSlideshow();
 
-  if(_currentImage == ALBUM_LENGTH - 1  || _playing) 
-    return false;
+    if(_currentImage == ALBUM_LENGTH - 1  || _playing) 
+        return false;
 
-  var slideDiv0 = document.getElementById('div0');
-  var slideDiv1 = document.getElementById('div1'); 
+    var slideDiv0 = document.getElementById('div0');
+    var slideDiv1 = document.getElementById('div1'); 
 
-  _currentImage = ALBUM_LENGTH - 1;
-  window.opener.changeImage(_currentImage, slideDiv1, 750);  
-  startSlide(slideDiv0,"up");  
+    _currentImage = ALBUM_LENGTH - 1;
+    window.opener.changeImage(_currentImage, slideDiv1, 750);  
+    startSlide(slideDiv0,"up");  
 }
 
 function prevPage(){
 
-  stopSlideshow();
+    stopSlideshow();
 
-  if(_currentImage == 0 || _playing) 
-    return false;
+    if(_currentImage == 0 || _playing) 
+        return false;
 
-  var slideDiv0 = document.getElementById('div0');
-  var slideDiv1 = document.getElementById('div1'); 
+    var slideDiv0 = document.getElementById('div0');
+    var slideDiv1 = document.getElementById('div1'); 
 
-  window.opener.changeImage(--_currentImage, slideDiv0, 750);  
-  window.opener.changeImage(_currentImage + 1, slideDiv1, 750);  
+    window.opener.changeImage(--_currentImage, slideDiv0, 750);  
+    window.opener.changeImage(_currentImage + 1, slideDiv1, 750);  
 
-  slideDiv0.style.marginTop = '-750px';
-  startSlide(slideDiv0,"down");
+    slideDiv0.style.marginTop = '-750px';
+    startSlide(slideDiv0,"down");
 
 }
 
 function firstPage(){
 
-  stopSlideshow();
+    stopSlideshow();
   
-  if(_currentImage == 0 || _playing) 
-    return false;
+    if(_currentImage == 0 || _playing) 
+        return false;
     
-  var slideDiv0 = document.getElementById('div0');
-  var slideDiv1 = document.getElementById('div1'); 
+    var slideDiv0 = document.getElementById('div0');
+    var slideDiv1 = document.getElementById('div1'); 
 
-  window.opener.changeImage(_currentImage, slideDiv1, 750);
-  _currentImage = 0;  
-  window.opener.changeImage(_currentImage, slideDiv0, 750);  
+    window.opener.changeImage(_currentImage, slideDiv1, 750);
+    _currentImage = 0;  
+    window.opener.changeImage(_currentImage, slideDiv0, 750);  
 
-  slideDiv0.style.marginTop = '-750px';
-  startSlide(slideDiv0,"down");  
+    slideDiv0.style.marginTop = '-750px';
+    startSlide(slideDiv0,"down");  
 }
 
 function startSlide(pSlideDiv, pDirection){
   
-  var increment = (pDirection=="up") ? 50: -50;
-  if(!window.opener._playAnimations) increment *= 15;
-  _playing = true;
-  _slideInterval = setInterval(function() {slideDiv(pSlideDiv,increment)},15);
+    var increment = (pDirection=="up") ? 50: -50;
+    if(!window.opener._playAnimations) increment *= 15;
+    _playing = true;
+    _slideInterval = setInterval(function() {
+        slideDiv(pSlideDiv,increment)
+        },15);
 
 }
 
 
 function slideDiv(pDiv, pDistance){
   
-  var over = false;
-  var gridMargin = window.opener.extractPixelValue(pDiv.style.marginTop) - pDistance;  
-  pDiv.style.marginTop = gridMargin + 'px';  
+    var over = false;
+    var gridMargin = window.opener.extractPixelValue(pDiv.style.marginTop) - pDistance;  
+    pDiv.style.marginTop = gridMargin + 'px';  
   
-  if(gridMargin == -750) {
-    //Upward slide is over
-    pDiv.style.marginTop = "0px";    
-    clearInterval(_slideInterval);
-    over = true;
-  } else if(gridMargin == 0){
-    //Downward slide is over    
-    clearInterval(_slideInterval);
-    over = true;
-  }
+    if(gridMargin == -750) {
+        //Upward slide is over
+        pDiv.style.marginTop = "0px";    
+        clearInterval(_slideInterval);
+        over = true;
+    } else if(gridMargin == 0){
+        //Downward slide is over    
+        clearInterval(_slideInterval);
+        over = true;
+    }
 
-  if(over){
-    window.opener.changeImage(_currentImage, pDiv, 750);
-  }
+    if(over){
+        window.opener.changeImage(_currentImage, pDiv, 750);
+    }
   
-  if(over) _playing = false;
+    if(over) _playing = false;
 
 }

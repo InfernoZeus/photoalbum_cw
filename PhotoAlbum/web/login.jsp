@@ -49,57 +49,57 @@ if("Login".equals(request.getParameter("action"))){
 
 %>
 <html>  
-  <head>
-    <title>Photo Album</title>
-    <link type="text/css" rel="stylesheet" href="style.css" />
-    <script type="text/javascript">
-//Returning false prevents the form from being submitted.
-function checkLoginForm(){
+    <head>
+        <title>Photo Album</title>
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <script type="text/javascript">
+            //Returning false prevents the form from being submitted.
+            function checkLoginForm(){
   
-  var username = document.getElementById('username').value;
-  var password = document.getElementById('password').value;
+                var username = document.getElementById('username').value;
+                var password = document.getElementById('password').value;
    
-}
+            }
 
-//This function retrieved from http://www.nicknettleton.com/zine/javascript/trim-a-string-in-javascript
-//Trims whitespaces from a string, so username and password are valid as required in the spec
-function trim(str){
-  return str.replace(/^\s+|\s+$/g, '');  
-}
+            //This function retrieved from http://www.nicknettleton.com/zine/javascript/trim-a-string-in-javascript
+            //Trims whitespaces from a string, so username and password are valid as required in the spec
+            function trim(str){
+                return str.replace(/^\s+|\s+$/g, '');  
+            }
 
-//If the login was successful, conditionally print this javascript, which runs automatically.
-//The window will close and the opener will reload, reflecting the user's succesful login.
-<% if(loginSuccess){ %>
-  window.opener.document.location.reload();
-  window.close();  
-<% } //end if loginsuccess %>
+            //If the login was successful, conditionally print this javascript, which runs automatically.
+            //The window will close and the opener will reload, reflecting the user's succesful login.
+            <% if(loginSuccess){ %>
+        window.opener.document.location.reload();
+        window.close();  
+            <% } //end if loginsuccess %>
 
     
-    function displayUsername() {    
-        var tUserName = '<%=rmUsername%>';
-        document.getElementById('username').value = tUserName;
-        if (tUserName.length > 0) {
-            document.getElementById('logChkBx').checked = true;
-        }    
-    }
+        function displayUsername() {    
+            var tUserName = '<%=rmUsername%>';
+            document.getElementById('username').value = tUserName;
+            if (tUserName.length > 0) {
+                document.getElementById('logChkBx').checked = true;
+            }    
+        }
     
-  </script>
-  </head>
-  <body onload="displayUsername()" >  
-  <% 
-    //Conditionally print the login failure message  
-    if(!"".equals(loginFailMessage)){ %>
-    <p class="errorMsg"><%=loginFailMessage %></p>
-    <br/>
-  <% } //end if %>
-   
+        </script>
+    </head>
+    <body onload="displayUsername()" >  
+        <% 
+          //Conditionally print the login failure message  
+          if(!"".equals(loginFailMessage)){ %>
+        <p class="errorMsg"><%=loginFailMessage %></p>
+        <br/>
+        <% } //end if %>
 
-    <form action="login.jsp" method="post" onsubmit="return(checkLoginForm())">
-      <span>Username: </span> <input type="text" name="username" id="username" ><br/>
-      <span>Password: </span> <input type="password" name="password" id="password"><br/><br/>
-      <span>Remember me? </span> <input type="checkbox" name="logChkBx" id="logChkBx" /><br/><br/>
-      <input type="submit" name="action" value="Login">
-    </form>
-  </body>
-</html>
-<% dbConnector.closeConnection(); %>
+
+        <form action="login.jsp" method="post" onsubmit="return(checkLoginForm())">
+            <span>Username: </span> <input type="text" name="username" id="username" ><br/>
+                <span>Password: </span> <input type="password" name="password" id="password"><br/><br/>
+                    <span>Remember me? </span> <input type="checkbox" name="logChkBx" id="logChkBx" /><br/><br/>
+                    <input type="submit" name="action" value="Login">
+                        </form>
+                        </body>
+                        </html>
+                        <% dbConnector.closeConnection(); %>

@@ -47,28 +47,28 @@ int photoCount = dbConnector.getRowCount();
 
 %>
 <html>  
-  <head>
-    <title>Photo Album : <%= albumTitle %></title>
-    <link type="text/css" rel="stylesheet" href="style.css" />
-    <script type="text/javascript">
+    <head>
+        <title>Photo Album : <%= albumTitle %></title>
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <script type="text/javascript">
 
-var CLICK_MODE = "DOUBLE";
-var CLICK_LOCATION = "photo.jsp?photo_id=";
+            var CLICK_MODE = "DOUBLE";
+            var CLICK_LOCATION = "photo.jsp?photo_id=";
 
-<%=util.printJSArrays(dbConnector) %>
+            <%=util.printJSArrays(dbConnector) %>
 
-    </script>
-    <script type="text/javascript" src="script.js"></script>
-  </head>
-  <body onload="onLoad()">
-    <%@ include file="top.jsp" %>
-    <h1><%=albumTitle %></h1>
-    <h2><%=albumDesc %></h2>
-    <div align="center"><p>This album contains <b><%=photoCount%></b> photo(s), and <b><%=userCount %></b> user(s) can comment on it. Double click an image to see its comments.</p></div><br/>
-    <hr/>
-    <div align="center"><p><a href="upload.jsp?album_id=<%= albumId %>">Add new image</a></p></div><br/>
+        </script>
+        <script type="text/javascript" src="script.js"></script>
+    </head>
+    <body onload="onLoad()">
+        <%@ include file="top.jsp" %>
+        <h1><%=albumTitle %></h1>
+        <h2><%=albumDesc %></h2>
+        <div align="center"><p>This album contains <b><%=photoCount%></b> photo(s), and <b><%=userCount %></b> user(s) can comment on it. Double click an image to see its comments.</p></div><br/>
+        <hr/>
+        <div align="center"><p><a href="upload.jsp?album_id=<%= albumId %>">Add new image</a></p></div><br/>
         <%@ include file="photoGrid.jsp" %>
 
-  </body>
+    </body>
 </html>
 <% dbConnector.closeConnection(); %>

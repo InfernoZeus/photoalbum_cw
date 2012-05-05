@@ -37,51 +37,51 @@ if("ChangePassword".equals(request.getParameter("action"))){
 
 %>
 <html>  
-  <head>
-    <title>Photo Album</title>
-    <link type="text/css" rel="stylesheet" href="style.css" />
-    <script type="text/javascript">
+    <head>
+        <title>Photo Album</title>
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <script type="text/javascript">
 
-//Returning false prevents the form from being submitted.
-function checkPasswordForm(){
+            //Returning false prevents the form from being submitted.
+            function checkPasswordForm(){
   
-  var username = document.getElementById('oldPassword').value;
-  var password = document.getElementById('newPassword').value;
+                var username = document.getElementById('oldPassword').value;
+                var password = document.getElementById('newPassword').value;
    
-}
+            }
 
-//This function retrieved from http://www.nicknettleton.com/zine/javascript/trim-a-string-in-javascript
-//Trims whitespaces from a string, so username and password are valid as required in the spec
-function trim(str){
-  return str.replace(/^\s+|\s+$/g, '');  
-}
+            //This function retrieved from http://www.nicknettleton.com/zine/javascript/trim-a-string-in-javascript
+            //Trims whitespaces from a string, so username and password are valid as required in the spec
+            function trim(str){
+                return str.replace(/^\s+|\s+$/g, '');  
+            }
 
-//If the login was successful, conditionally print this javascript, which runs automatically.
-//The window will close and the opener will reload, reflecting the user's succesful login.
-<% if(changePasswordSuccess){ %>
-  alert("Password changed successfully!");
-  window.close();  
-<% } //end if loginsuccess %>
+            //If the login was successful, conditionally print this javascript, which runs automatically.
+            //The window will close and the opener will reload, reflecting the user's succesful login.
+            <% if(changePasswordSuccess){ %>
+        alert("Password changed successfully!");
+        window.close();  
+            <% } //end if loginsuccess %>
 
     
-  </script>
-  </head>
-  <body>  
-  <% 
-    //Conditionally print the login failure message  
-    if(!"".equals(changePasswordFailMessage)){ %>
-    <p class="errorMsg"><%=changePasswordFailMessage %></p>
-    <br/>
-  <% } //end if %>
-   
+        </script>
+    </head>
+    <body>  
+        <% 
+          //Conditionally print the login failure message  
+          if(!"".equals(changePasswordFailMessage)){ %>
+        <p class="errorMsg"><%=changePasswordFailMessage %></p>
+        <br/>
+        <% } //end if %>
 
-    <form action="changePassword.jsp" method="post" onsubmit="return(checkPasswordForm())">
-      <span>Username: </span><br/><input type="text" name="username" id="username" readonly="true" value="<%=login.getUsername()%>" ><br/><br/>
-      <span>Old Password: </span><br/><input type="password" name="oldPassword" id="oldPassword"><br/><br/>
-      <span>New Password: </span><br/><input type="password" name="newPassword" id="newPassword"><br/><br/>
-      
-      <input type="submit" name="action" value="ChangePassword">
-    </form>
-  </body>
-</html>
-<% dbConnector.closeConnection(); %>
+
+        <form action="changePassword.jsp" method="post" onsubmit="return(checkPasswordForm())">
+            <span>Username: </span><br/><input type="text" name="username" id="username" readonly="true" value="<%=login.getUsername()%>" ><br/><br/>
+                <span>Old Password: </span><br/><input type="password" name="oldPassword" id="oldPassword"><br/><br/>
+                    <span>New Password: </span><br/><input type="password" name="newPassword" id="newPassword"><br/><br/>
+
+                        <input type="submit" name="action" value="ChangePassword">
+                            </form>
+                            </body>
+                            </html>
+                            <% dbConnector.closeConnection(); %>

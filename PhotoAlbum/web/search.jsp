@@ -31,27 +31,27 @@ int photoCount = dbConnector.getRowCount();
 
 %>
 <html>  
-  <head>
-    <title>Search Results</title>
-    <link type="text/css" rel="stylesheet" href="style.css" />
-    <script type="text/javascript">
+    <head>
+        <title>Search Results</title>
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <script type="text/javascript">
 
-var CLICK_MODE = "DOUBLE";
-var CLICK_LOCATION = "photo.jsp?photo_id=";
+            var CLICK_MODE = "DOUBLE";
+            var CLICK_LOCATION = "photo.jsp?photo_id=";
 
-//Use generic functionality to print the JS arrays.
-<%=util.printJSArrays(dbConnector) %>
+            //Use generic functionality to print the JS arrays.
+            <%=util.printJSArrays(dbConnector) %>
 
-    </script>
-    <script type="text/javascript" src="script.js"></script>
-  </head>
-  <body onload="onLoad()">
-    <%@ include file="top.jsp" %>
-    <h1>Results for <i><%=searchQuery%></i></h1>
-    <h2><%=photoCount %> photo(s) found</h2>
-      <% if(photoCount > 0) { %>
+        </script>
+        <script type="text/javascript" src="script.js"></script>
+    </head>
+    <body onload="onLoad()">
+        <%@ include file="top.jsp" %>
+        <h1>Results for <i><%=searchQuery%></i></h1>
+        <h2><%=photoCount %> photo(s) found</h2>
+        <% if(photoCount > 0) { %>
         <%@ include file="photoGrid.jsp" %>
-      <% }//end if photocount > 0 %>
-  </body>
+        <% }//end if photocount > 0 %>
+    </body>
 </html>
 <% dbConnector.closeConnection(); %>

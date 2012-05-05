@@ -4,12 +4,12 @@
 
 //Makes the search result page a little nicer by displaying the search text
 //in the search box
-            String sq = request.getParameter("searchquery");
-            if (sq != null) {
-                sq = util.cleanString(sq);
-            } else {
-                sq = "";
-            }
+    String sq = request.getParameter("searchquery");
+    if (sq != null) {
+        sq = util.cleanString(sq);
+    } else {
+        sq = "";
+    }
 %>
 <div id="rightCorner">  
     <p class="topP">

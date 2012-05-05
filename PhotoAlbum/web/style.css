@@ -1,138 +1,138 @@
 body {
-  background-color: #C5D5F3;
-  font-family: 'Arial';
+    background-color: #C5D5F3;
+    font-family: 'Arial';
 }
 
 p {
-  margin: 0;
+    margin: 0;
 }  
 
 h1{
-  font-size: large;   
-  text-align:center;         
+    font-size: large;   
+    text-align:center;         
 }
 
 h2{
-  font-size:12pt;     
-  text-align:center;        
+    font-size:12pt;     
+    text-align:center;        
 }
 
 #helpText{
-  text-align: right;
-  font-size: smaller;
-  color: blue;
+    text-align: right;
+    font-size: smaller;
+    color: blue;
 }
 
 #mainArea, #commentArea, #navControls{
-  margin-left: auto;
-  margin-right: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .center{
-  text-align: center;
+    text-align: center;
 }
 
 #mainArea{
-  width: 610px;
-  height: 610px;
-  overflow: hidden;
+    width: 610px;
+    height: 610px;
+    overflow: hidden;
 }
 
 
 #commentArea{
-  margin-top: 10px;
-  width: 610px;
+    margin-top: 10px;
+    width: 610px;
 }
 
 #commentTextarea{
-  width: 510px;
-  margin-left: 50px;
+    width: 510px;
+    margin-left: 50px;
 }
 
 #comments{
-  list-style-type:none;
-  margin: 0;
-  padding: 0 0 10px 0;
+    list-style-type:none;
+    margin: 0;
+    padding: 0 0 10px 0;
 }
 
 #comments li{
-  padding: 2px;
-  margin: 2px 0 10px 0;  
-  border: 1px dotted gray;
-  background-color: #D1F1F3;
+    padding: 2px;
+    margin: 2px 0 10px 0;  
+    border: 1px dotted gray;
+    background-color: #D1F1F3;
 }
 
 #navControls{
-  width: 610px;
-  margin-top: 10px;
-  text-align: center;
+    width: 610px;
+    margin-top: 10px;
+    text-align: center;
 }
 
 #navControls a{
-  padding-right: 10px;
+    padding-right: 10px;
 }
 
 .grid{
-  width: 610px;  
-  display: static;
+    width: 610px;  
+    display: static;
 }
 
 .grid img, #zoomImage, .popupDiv img{
-  margin: 0px auto 0px auto;  
-  display: block;
+    margin: 0px auto 0px auto;  
+    display: block;
 }
 
 .grid td{
-  width: 202px;  
-  padding-right: 2px;
-  padding-bottom: 2px;
-  overflow:hidden;
+    width: 202px;  
+    padding-right: 2px;
+    padding-bottom: 2px;
+    overflow:hidden;
 }
 
 .thumbContainer{
-  border: 1px solid #D1F1F3;
-  height: 180px;
-  width: 200px;  
-  background-color: #D1F1F3;
+    border: 1px solid #D1F1F3;
+    height: 180px;
+    width: 200px;  
+    background-color: #D1F1F3;
 }
 
 .thumbContainer img{
-  border: none;
+    border: none;
 }
 
 .zoom{
-  display: none;
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  border: 1px solid #779DE3;
-  background-color: #779DE3;  
+    display: none;
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border: 1px solid #779DE3;
+    background-color: #779DE3;  
 }
 
 .popupDiv{  
-  width: 600px;
-  height: 600px;
+    width: 600px;
+    height: 600px;
 }
 
 .caption{
-  display: block;  
-  width: 202px; 
-  height: 20px;
-  background-color: white;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  font-size: smaller;
+    display: block;  
+    width: 202px; 
+    height: 20px;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-size: smaller;
 }
 
 #rightCorner{
-  margin-left: auto;
-  margin-right:1em;
-  width: 350px;
-  height: 65px;
-  background: #E4ECFA;
-  font-size: small;
-  padding: 0.3em 1em 0.3em 1em;
+    margin-left: auto;
+    margin-right:1em;
+    width: 350px;
+    height: 65px;
+    background: #E4ECFA;
+    font-size: small;
+    padding: 0.3em 1em 0.3em 1em;
 }
 
 #rightCorner .topP, form{
@@ -140,16 +140,16 @@ h2{
 }
 
 #rightCorner .botP{
-  margin: 0.4em 0 0.4em 0;  
-  padding: 0.4em 0 0 0;
-  border-top: 1px solid black;
+    margin: 0.4em 0 0.4em 0;  
+    padding: 0.4em 0 0 0;
+    border-top: 1px solid black;
 }
 
 .errorMsg{
-  color:white;
-  background-color: red;
-  border: 1px solid red;
-  display:block;
-  padding:0.3em;
-  font-size: small;
+    color:white;
+    background-color: red;
+    border: 1px solid red;
+    display:block;
+    padding:0.3em;
+    font-size: small;
 }

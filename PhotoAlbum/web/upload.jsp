@@ -47,24 +47,24 @@ int photoCount = dbConnector.getRowCount();
 
 %>
 <html>
-  <head>
-    <title>Photo Album : <%= albumTitle %> : Upload</title>
-    <link type="text/css" rel="stylesheet" href="style.css" />
-    <script type="text/javascript" src="script.js"></script>
-  </head>
-  <body onload="onLoad()">
-    <%@ include file="top.jsp" %>
-    <h1><%=albumTitle %></h1>
-    <h2>Upload New Image</h2>
-    <div align="center"><p>Add a new image to your album by using the form below.  Please make sure that you choose a jpeg, gif or png file!</p><br/>
-    <form name="uploadFm" enctype="multipart/form-data" action="uploadfile.jsp" method="POST" onsubmit="return confirmImages()">
-        Title: <input type="text" name="title"/><br/>
-        Description: <input type="description" name="description"/><br/>
-        File: <input type="file" name="file" accept="image/jpeg,image/gif,image/png"/><br/>
-        <input type="hidden" name="album_id" id="album_id" value="<%=request.getParameter("album_id")%>"/>
-        <input type="submit" />
-    </form>
+    <head>
+        <title>Photo Album : <%= albumTitle %> : Upload</title>
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <script type="text/javascript" src="script.js"></script>
+    </head>
+    <body onload="onLoad()">
+        <%@ include file="top.jsp" %>
+        <h1><%=albumTitle %></h1>
+        <h2>Upload New Image</h2>
+        <div align="center"><p>Add a new image to your album by using the form below.  Please make sure that you choose a jpeg, gif or png file!</p><br/>
+            <form name="uploadFm" enctype="multipart/form-data" action="uploadfile.jsp" method="POST" onsubmit="return confirmImages()">
+                Title: <input type="text" name="title"/><br/>
+                Description: <input type="description" name="description"/><br/>
+                File: <input type="file" name="file" accept="image/jpeg,image/gif,image/png"/><br/>
+                <input type="hidden" name="album_id" id="album_id" value="<%=request.getParameter("album_id")%>"/>
+                <input type="submit" />
+            </form>
         </div>
-  </body>
+    </body>
 </html>
 <% dbConnector.closeConnection(); %>
