@@ -6,45 +6,45 @@
 
 <%
 
-boolean loginSuccess = false;
-String loginFailMessage = "";
-String rmUsername = "";
+    boolean loginSuccess = false;
+    String loginFailMessage = "";
+    String rmUsername = "";
 
 //Process a login. "action" is the name of the submit button and "Login" is its value
 //so this only runs when a user has submitted the form. This allows the page to both
 //display the login form and process login requests.
-if("Login".equals(request.getParameter("action"))){
-  
-  //Basic error checking. If the required parameters don't exist, cancel processing
-  //and redirect the user to an error page. Otherwise a nasty Tomcat error message appears.
-  if(!util.requireParams("username,password", "0,0", request, response)){
-    dbConnector.closeConnection();
-    return;
-  }
-      
-  String username = util.cleanString(request.getParameter("username"));
-  String password = util.cleanString(request.getParameter("password"));
-  String chkBox = request.getParameter("logChkBx");
-  
-  boolean rememberMe = false;
-  if (chkBox != null) {
-    if (chkBox.equalsIgnoreCase("on")) {
-      rememberMe = true;
+    if ("Login".equals(request.getParameter("action"))) {
+
+        //Basic error checking. If the required parameters don't exist, cancel processing
+        //and redirect the user to an error page. Otherwise a nasty Tomcat error message appears.
+        if (!util.requireParams("username,password", "0,0", request, response)) {
+            dbConnector.closeConnection();
+            return;
+        }
+
+        String username = util.cleanString(request.getParameter("username"));
+        String password = util.cleanString(request.getParameter("password"));
+        String chkBox = request.getParameter("logChkBx");
+
+        boolean rememberMe = false;
+        if (chkBox != null) {
+            if (chkBox.equalsIgnoreCase("on")) {
+                rememberMe = true;
+            }
+        }
+
+
+        if (login.checkUser(dbConnector, username, password, response, rememberMe)) {
+            loginSuccess = true;
+        } else {
+            loginFailMessage = "You entered the wrong username or password. Please try again.";
+        }
+
+    } else {
+        // Remember me functionality
+        Cookie[] cookies = request.getCookies();
+        rmUsername = login.rememberMeUsername(cookies, dbConnector, response);
     }
-  }  
-  
-  
-  if(login.checkUser(dbConnector,username,password,response, rememberMe)){
-    loginSuccess = true;    
-  } else {
-    loginFailMessage = "You entered the wrong username or password. Please try again.";
-  }
-  
-} else {
-    // Remember me functionality
-    Cookie[] cookies = request.getCookies();
-    rmUsername = login.rememberMeUsername(cookies,dbConnector,response);
-}
 
 
 %>
@@ -69,27 +69,27 @@ if("Login".equals(request.getParameter("action"))){
 
             //If the login was successful, conditionally print this javascript, which runs automatically.
             //The window will close and the opener will reload, reflecting the user's succesful login.
-            <% if(loginSuccess){ %>
-        window.opener.document.location.reload();
-        window.close();  
+            <% if (loginSuccess) {%>
+                window.opener.document.location.reload();
+                window.close();  
             <% } //end if loginsuccess %>
 
     
-        function displayUsername() {    
-            var tUserName = '<%=rmUsername%>';
-            document.getElementById('username').value = tUserName;
-            if (tUserName.length > 0) {
-                document.getElementById('logChkBx').checked = true;
-            }    
-        }
+                function displayUsername() {    
+                    var tUserName = '<%=rmUsername%>';
+                    document.getElementById('username').value = tUserName;
+                    if (tUserName.length > 0) {
+                        document.getElementById('logChkBx').checked = true;
+                    }    
+                }
     
         </script>
     </head>
     <body onload="displayUsername()" >  
-        <% 
-          //Conditionally print the login failure message  
-          if(!"".equals(loginFailMessage)){ %>
-        <p class="errorMsg"><%=loginFailMessage %></p>
+        <%
+            //Conditionally print the login failure message  
+            if (!"".equals(loginFailMessage)) {%>
+        <p class="errorMsg"><%=loginFailMessage%></p>
         <br/>
         <% } //end if %>
 
@@ -102,4 +102,4 @@ if("Login".equals(request.getParameter("action"))){
                         </form>
                         </body>
                         </html>
-                        <% dbConnector.closeConnection(); %>
+                        <% dbConnector.closeConnection();%>

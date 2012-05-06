@@ -6,28 +6,27 @@
 
 //Basic error checking. If the required parameters don't exist, cancel processing
 //and redirect the user to an error page. Otherwise a nasty Tomcat error message appears.
-if(!util.requireParams("searchquery", "1", request, response)){
-  dbConnector.closeConnection();
-  return;
-}
+    if (!util.requireParams("searchquery", "1", request, response)) {
+        dbConnector.closeConnection();
+        return;
+    }
 
 //Retrieve the query from the request's POST parameters.
-String searchQuery = util.cleanString(request.getParameter("searchquery"));
+    String searchQuery = util.cleanString(request.getParameter("searchquery"));
 
 //Use the LIKE function and search public albums to match photos with the search query
 //Subquery used to find photos which user has permissions on
-dbConnector.executeSQL(
-  "SELECT p.src, p.title, p.id "
-+ "FROM photos p "
-+ "JOIN albums a ON p.album_id = a.id AND (" 
-+ "  a.is_public = 1 " 
-+ "  OR a.owner_id = " + login.getUserId() + " "
-+ "  OR EXISTS(SELECT 1 FROM permissions p WHERE p.album_id = a.id AND p.user_id = " + login.getUserId() + ")) "
-+ "WHERE UPPER(p.description) LIKE UPPER('%" + searchQuery + "%')"
-+ "OR UPPER(p.title) LIKE UPPER('%" + searchQuery + "%')"
-);
+    dbConnector.executeSQL(
+            "SELECT p.src, p.title, p.id "
+            + "FROM photos p "
+            + "JOIN albums a ON p.album_id = a.id AND ("
+            + "  a.is_public = 1 "
+            + "  OR a.owner_id = " + login.getUserId() + " "
+            + "  OR EXISTS(SELECT 1 FROM permissions p WHERE p.album_id = a.id AND p.user_id = " + login.getUserId() + ")) "
+            + "WHERE UPPER(p.description) LIKE UPPER('%" + searchQuery + "%')"
+            + "OR UPPER(p.title) LIKE UPPER('%" + searchQuery + "%')");
 
-int photoCount = dbConnector.getRowCount();
+    int photoCount = dbConnector.getRowCount();
 
 %>
 <html>  
@@ -40,7 +39,7 @@ int photoCount = dbConnector.getRowCount();
             var CLICK_LOCATION = "photo.jsp?photo_id=";
 
             //Use generic functionality to print the JS arrays.
-            <%=util.printJSArrays(dbConnector) %>
+            <%=util.printJSArrays(dbConnector)%>
 
         </script>
         <script type="text/javascript" src="script.js"></script>
@@ -48,10 +47,10 @@ int photoCount = dbConnector.getRowCount();
     <body onload="onLoad()">
         <%@ include file="top.jsp" %>
         <h1>Results for <i><%=searchQuery%></i></h1>
-        <h2><%=photoCount %> photo(s) found</h2>
-        <% if(photoCount > 0) { %>
+        <h2><%=photoCount%> photo(s) found</h2>
+        <% if (photoCount > 0) {%>
         <%@ include file="photoGrid.jsp" %>
         <% }//end if photocount > 0 %>
     </body>
 </html>
-<% dbConnector.closeConnection(); %>
+<% dbConnector.closeConnection();%>

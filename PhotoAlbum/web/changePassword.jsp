@@ -6,33 +6,33 @@
 
 <%
 
-boolean changePasswordSuccess = false;
-String changePasswordFailMessage = "";
+    boolean changePasswordSuccess = false;
+    String changePasswordFailMessage = "";
 
 //Process a login. "action" is the name of the submit button and "Login" is its value
 //so this only runs when a user has submitted the form. This allows the page to both
 //display the login form and process login requests.
-if("ChangePassword".equals(request.getParameter("action"))){
-  
-  //Basic error checking. If the required parameters don't exist, cancel processing
-  //and redirect the user to an error page. Otherwise a nasty Tomcat error message appears.
-  if(!util.requireParams("oldPassword,newPassword", "0,0", request, response)){
-    dbConnector.closeConnection();
-    return;
-  }
-      
-  String oldPassword = util.cleanString(request.getParameter("oldPassword"));
-  String newPassword = util.cleanString(request.getParameter("newPassword"));
-  
-    
-  
-  if(login.changePassword(dbConnector,oldPassword,newPassword)){
-    changePasswordSuccess = true;    
-  } else {
-    changePasswordFailMessage = "Password was NOT updated. Please try again.";
-  }
-  
-}
+    if ("ChangePassword".equals(request.getParameter("action"))) {
+
+        //Basic error checking. If the required parameters don't exist, cancel processing
+        //and redirect the user to an error page. Otherwise a nasty Tomcat error message appears.
+        if (!util.requireParams("oldPassword,newPassword", "0,0", request, response)) {
+            dbConnector.closeConnection();
+            return;
+        }
+
+        String oldPassword = util.cleanString(request.getParameter("oldPassword"));
+        String newPassword = util.cleanString(request.getParameter("newPassword"));
+
+
+
+        if (login.changePassword(dbConnector, oldPassword, newPassword)) {
+            changePasswordSuccess = true;
+        } else {
+            changePasswordFailMessage = "Password was NOT updated. Please try again.";
+        }
+
+    }
 
 
 %>
@@ -58,19 +58,19 @@ if("ChangePassword".equals(request.getParameter("action"))){
 
             //If the login was successful, conditionally print this javascript, which runs automatically.
             //The window will close and the opener will reload, reflecting the user's succesful login.
-            <% if(changePasswordSuccess){ %>
-        alert("Password changed successfully!");
-        window.close();  
+            <% if (changePasswordSuccess) {%>
+                alert("Password changed successfully!");
+                window.close();  
             <% } //end if loginsuccess %>
 
     
         </script>
     </head>
     <body>  
-        <% 
-          //Conditionally print the login failure message  
-          if(!"".equals(changePasswordFailMessage)){ %>
-        <p class="errorMsg"><%=changePasswordFailMessage %></p>
+        <%
+            //Conditionally print the login failure message  
+            if (!"".equals(changePasswordFailMessage)) {%>
+        <p class="errorMsg"><%=changePasswordFailMessage%></p>
         <br/>
         <% } //end if %>
 
@@ -84,4 +84,4 @@ if("ChangePassword".equals(request.getParameter("action"))){
                             </form>
                             </body>
                             </html>
-                            <% dbConnector.closeConnection(); %>
+                            <% dbConnector.closeConnection();%>

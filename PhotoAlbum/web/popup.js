@@ -116,7 +116,7 @@ function startSlide(pSlideDiv, pDirection){
     _playing = true;
     _slideInterval = setInterval(function() {
         slideDiv(pSlideDiv,increment)
-        },15);
+    },15);
 
 }
 

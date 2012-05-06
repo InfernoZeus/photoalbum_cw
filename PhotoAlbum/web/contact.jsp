@@ -4,9 +4,12 @@
 <%
 
 //addComment.jsp may return to this page with a message. If it exists, store it in a variable.
-String message = request.getParameter("message");
-if(message==null) message = "";
-else message = util.cleanString(message);
+    String message = request.getParameter("message");
+    if (message == null) {
+        message = "";
+    } else {
+        message = util.cleanString(message);
+    }
 
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -18,12 +21,12 @@ else message = util.cleanString(message);
     <body>
         <%@ include file="top.jsp" %>
         <%//Conditionally display the message from addContact.jsp
-        if(!"".equals(message)){
+            if (!"".equals(message)) {
         %>
-        <p class="errorMsg"><%=message %></p>
+        <p class="errorMsg"><%=message%></p>
         <%
-       }//end if message
-        %>
+            }//end if message
+%>
         <h1>PhotoAlbum</h1>
         <h2>Feedback, Bug submission and Support page...</h2>
 
@@ -49,4 +52,4 @@ else message = util.cleanString(message);
         </form>
     </body>
 </html>
-<% dbConnector.closeConnection(); %>
+<% dbConnector.closeConnection();%>

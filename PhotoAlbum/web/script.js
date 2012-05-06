@@ -313,7 +313,7 @@ function startSlide(pSlideDiv, pDirection){
     _playing = true;
     _slideInterval = setInterval(function() {
         slideDiv(pSlideDiv,increment)
-        }, 20);
+    }, 20);
 }
 
 //Called on interval _slideInterval

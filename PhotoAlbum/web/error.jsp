@@ -3,18 +3,18 @@
 
 
 <%
-String errorMsg = "";
-try {
-    System.out.println("Parameters");
-    System.out.println("----------");
-    Enumeration e = request.getAttributeNames();
-    while (e.hasMoreElements()) {
-        System.out.println(e.nextElement());
+    String errorMsg = "";
+    try {
+        System.out.println("Parameters");
+        System.out.println("----------");
+        Enumeration e = request.getAttributeNames();
+        while (e.hasMoreElements()) {
+            System.out.println(e.nextElement());
+        }
+        errorMsg = request.getAttribute("photoalbum.error_message").toString();
+    } catch (Exception e) {
+        e.printStackTrace();
     }
-    errorMsg = request.getAttribute("photoalbum.error_message").toString();
-} catch (Exception e) {
-    e.printStackTrace();
-}    
 
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -29,7 +29,7 @@ try {
         <div class="errorMsg">
             Sorry, an unexpected error occured. Please report this to the webmaster.<br/><br/>The reported error was:
             <ul>
-                <li><%=errorMsg %></li>
+                <li><%=errorMsg%></li>
             </ul>
         </div>
 
