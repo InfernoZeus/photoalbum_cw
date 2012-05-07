@@ -12,15 +12,15 @@
 
 //Remove nasty characters from the comment text to stop any mischief.
     String commentText = util.cleanString(request.getParameter("commentText"));
-//Get the photo id, failing if it is not an integer.
+    //Get the photo id, failing if it is not an integer.
     String photoId;
     if ((photoId = util.requireTxt(request.getParameter("photo_id"), request, response)) == null) {
         dbConnector.closeConnection();
         return;
     }
 
-//Get the album id for this photo so it can be checked against the user's permissions.
-    dbConnector.executeSQL("SELECT album_id FROM photos WHERE id = " + photoId);
+    //Get the album id for this photo so it can be checked against the user's permissions.
+    dbConnector.getAlbumIdFromPhotoId(photoId);
     int albumId = Integer.parseInt(dbConnector.getRecord(0, 0).toString());
 
     if (login.getAlbumPermission(albumId) == null) {
@@ -33,9 +33,7 @@
     String redirectUrl = "photo.jsp?photo_id=" + photoId;
 
     //Do the record insert.
-    int result = dbConnector.updateSQL(
-            "INSERT INTO comments(photo_id, user_id, comment) "
-            + "VALUES('" + photoId + "', '" + login.getUserId() + "', '" + commentText + "')");
+    int result = dbConnector.addComment(photoId, login.getUserId(), commentText);
 
     if (result == 0) {
         //If the rows affected was 0, an error occured during the insert statement.

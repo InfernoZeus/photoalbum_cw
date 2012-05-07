@@ -1,11 +1,6 @@
 package photoalbum;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class DBConnector {
@@ -29,7 +24,7 @@ public class DBConnector {
     }
 
     //Method for connecting to the database using supplied arguments.
-    public void connect(String pUrl, String pDriver, String pUsername, String pPassword) {
+    private void connect(String pUrl, String pDriver, String pUsername, String pPassword) {
 
         dbUrl = pUrl;
         dbDriver = pDriver;
@@ -51,18 +46,15 @@ public class DBConnector {
     }
 
     //Executes SELECT statements
-    public boolean executeSQL(String pQry) {
+    private boolean executeSQL(PreparedStatement stmt) {
 
-        Statement stmt;
         ResultSet rs;
         clearResults();
 
         try {
-            //Create the statement object
-            stmt = dbConnection.createStatement();
             //Run the statement provided as the function's argument, storing the results
             //in a result set object.
-            rs = stmt.executeQuery(pQry);
+            rs = stmt.executeQuery();
             rsmd = rs.getMetaData();
 
             //The column count is known but the row count isn't, but we can increment it
@@ -99,12 +91,11 @@ public class DBConnector {
     }
 
     //Run a SQL query which modifies data (i.e. INSERT, UPDATE, DELETE)
-    public int updateSQL(String pStmt) {
+    private int updateSQL(PreparedStatement stmt) {
 
         try {
-            Statement stmt = dbConnection.createStatement();
             //Use the executeUpdate command to run this type of statement
-            int rowsAffected = stmt.executeUpdate(pStmt);
+            int rowsAffected = stmt.executeUpdate();
             stmt.close();
 
             return rowsAffected;
@@ -141,20 +132,12 @@ public class DBConnector {
         return rowCount;
     }
 
-    public void setRowCount(int rowCount) {
-        throw new RuntimeException("Illegal attempt to set readonly field.");
-    }
-
     public int getColCount() {
         return colCount;
     }
 
-    public void setColCount(int colCount) {
-        throw new RuntimeException("Illegal attempt to set readonly field.");
-    }
-
     //Clear all the result data in preparation for running a new query.
-    public void clearResults() {
+    private void clearResults() {
         colCount = 0;
         rowCount = 0;
         resultSet.clear();
@@ -164,11 +147,253 @@ public class DBConnector {
     //page which implements this bean.
     public boolean closeConnection() {
         try {
-            dbConnection.close();
+        	if (dbConnection != null)
+        		dbConnection.close();
             return true;
         } catch (SQLException ex) {
             System.err.println(ex);
             return false;
+        }
+    }
+
+    void checkUsernamePassword(String username, String password) {
+    	if (dbConnection == null)
+    		return;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT id, name FROM users WHERE username = ? AND password = ?");
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            executeSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+
+    void retrieveUserName(int pUserId) {
+    	if (dbConnection == null)
+    		return;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT username FROM users WHERE id = ?");
+            stmt.setInt(1, pUserId);
+            executeSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+
+    void getAlbumPermissions(int userId) {
+    	if (dbConnection == null)
+    		return;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT album_id, type FROM permissions WHERE user_id = ?");
+            stmt.setInt(1, userId);
+            executeSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+
+    int changeUsersPassword(String username, String pOldPassword, String pNewPassword) {
+    	if (dbConnection == null)
+    		return 0;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("UPDATE users SET password = ? WHERE username = ? AND password = ?");
+            stmt.setString(1, pNewPassword);
+            stmt.setString(2, username);
+            stmt.setString(3, pOldPassword);
+            return updateSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+            return 0;
+        }
+    }
+
+    void search(String searchString) {
+    	if (dbConnection == null)
+    		return;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT p.src, p.title, p.id FROM photos p JOIN albums a ON p.album_id = a.id WHERE UPPER(p.description) LIKE UPPER('%?%') OR UPPER(p.title) LIKE UPPER('%?%')");
+            stmt.setString(1, searchString);
+            stmt.setString(2, searchString);
+            executeSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+
+    public void getAlbumIdFromPhotoId(String photoId) {
+    	if (dbConnection == null)
+    		return;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT album_id FROM photos WHERE id = ?");
+            stmt.setString(1, photoId);
+            executeSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+
+    public int addComment(String photoId, int userId, String commentText) {
+    	if (dbConnection == null)
+    		return 0;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("INSERT INTO comments(photo_id, user_id, comment) VALUES('?','?','?')");
+            stmt.setString(1, photoId);
+            stmt.setInt(2, userId);
+            stmt.setString(3, commentText);
+            return updateSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+            return 0;
+        }
+    }
+
+    public int addContact(String issueType, String name, String email, String text) {
+    	if (dbConnection == null)
+    		return 0;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("INSERT INTO contact(issue_type,name,email,text) VALUES('?', '?', '?', '?')");
+            stmt.setString(1, issueType);
+            stmt.setString(2, name);
+            stmt.setString(3, email);
+            stmt.setString(4, text);
+            return updateSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+            return 0;
+        }
+    }
+    
+    public boolean hasAlbum(String albumId) {
+    	if (dbConnection == null)
+    		return false;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT 1 FROM albums a WHERE id = ?");
+            stmt.setString(1, albumId);	
+            executeSQL(stmt);
+            return (getRowCount() != 0);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+            return false;
+        }
+    }
+    
+    public void getAlbumInfo(String albumId) {
+    	if (dbConnection == null)
+    		return;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT a.title, a.description, (SELECT COUNT(*) FROM permissions p WHERE p.album_id = a.id ) FROM albums a WHERE a.id = ?");
+            stmt.setString(1, albumId);
+            executeSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+    
+    public void getPhotosInAlbum(String albumId) {
+    	if (dbConnection == null)
+    		return;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT p.src, p.title, p.id FROM photos p WHERE p.album_id = ?");
+            stmt.setString(1, albumId);
+            executeSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+    
+    public void getIndexCoverInfo(int userId) {
+    	if (dbConnection == null)
+    		return;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT p.src, a.title, p.album_id FROM photos p JOIN albums a ON p.album_id  = a.id AND (a.is_public = 1 OR a.owner_id = ? OR EXISTS(SELECT 1 FROM permissions pr WHERE pr.album_id = a.id AND pr.user_id = ?)) WHERE (p.id = (SELECT p2.id FROM photos p2 WHERE p2.album_id = p.album_id ORDER BY p2.id LIMIT 1))");
+            stmt.setInt(1, userId);
+            stmt.setInt(2, userId);
+            executeSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+    
+    public boolean hasPhoto(String photoId) {
+    	if (dbConnection == null)
+    		return false;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT 1 FROM photos WHERE id = ?");
+            stmt.setString(1, photoId);
+            executeSQL(stmt);
+            return (getRowCount() != 0);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+            return false;
+        }
+    }
+    
+    public void getPhotoInfo(String photoId) {
+    	if (dbConnection == null)
+    		return;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT p.src, p.title, p.description, a.title, a.id FROM photos p JOIN albums a ON p.album_id = a.id WHERE p.id = ?");
+            stmt.setString(1, photoId);
+            executeSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+    
+    public int deletePhoto(String photoId) {
+    	if (dbConnection == null)
+    		return 0;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("DELETE FROM photos WHERE id = ?");
+            stmt.setString(1, photoId);
+            return updateSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+            return 0;
+        }
+    }
+    
+    public void getCommentsForPhoto(String photoId) {
+    	if (dbConnection == null)
+    		return;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT c.comment, u.name FROM comments c JOIN users u ON c.user_id = u.id WHERE c.photo_id = ?");
+            stmt.setString(1, photoId);
+            executeSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+    
+    public void searchWithPermissionCheck(String searchString, int userId) {
+    	if (dbConnection == null)
+    		return;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT p.src, p.title, p.id FROM photos p JOIN albums a ON p.album_id = a.id AND (a.is_public = 1 OR a.owner_id = ? OR EXISTS(SELECT 1 FROM permissions p WHERE p.album_id = a.id AND p.user_id = ?)) WHERE UPPER(p.description) LIKE UPPER('%?%') OR UPPER(p.title) LIKE UPPER('%?%')");
+            stmt.setInt(1, userId);
+            stmt.setInt(2, userId);
+            stmt.setString(3, searchString);
+            stmt.setString(4, searchString);
+            executeSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+    
+    public int addPhoto(String title, String description, String srcName, String albumId) {
+    	if (dbConnection == null)
+    		return 0;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("INSERT INTO photos(title, description, src, album_id) " + "VALUES('?', '?', '?', '?')");
+            stmt.setString(1, title);
+            stmt.setString(2, description);
+            stmt.setString(3, srcName);
+            stmt.setString(4, albumId);
+            return updateSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+            return 0;
         }
     }
 }

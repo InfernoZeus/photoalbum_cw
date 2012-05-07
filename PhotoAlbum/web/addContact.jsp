@@ -20,9 +20,7 @@
     String redirectUrl = "contact.jsp";
 
     //Do the record insert.
-    int result = dbConnector.updateSQL(
-            "INSERT INTO contact(issue_type,name,email,text) "
-            + "VALUES('" + issue_type + "', '" + name + "', '" + email + "', '" + text + "')");
+    int result = dbConnector.addContact(issue_type, name, email, text);
 
     if (result == 0) {
         //If the rows affected was 0, an error occured during the insert statement.

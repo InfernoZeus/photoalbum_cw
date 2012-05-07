@@ -33,8 +33,7 @@ public class Login {
             this.userId = UtilBean.ADMIN_USER_ID;
             this.name = UtilBean.ADMIN_FULL_NAME;
         } else {
-            dbc.executeSQL(
-                    "SELECT id, name FROM users WHERE username = '" + username + "' AND password = '" + password + "'");
+            dbc.checkUsernamePassword(username, password);
 
             //If there was a result, a row exists so this username/password is valid
             if (dbc.getRowCount() > 0) {
@@ -115,8 +114,7 @@ public class Login {
             username = UtilBean.ADMIN_USER_NAME;
             setPhotoAlbumCookie(UtilBean.COOKIE_PHOTOALBUM_ACC_TYPE, UtilBean.ACC_TYPE_SUPER, pResponse);
         } else {
-            pDbc.executeSQL(
-                    "SELECT username FROM users WHERE id = " + pUserId);
+            pDbc.retrieveUserName(pUserId);
 
             //If there was a result, a row exists so this username/password is valid
             if (pDbc.getRowCount() > 0) {
@@ -173,10 +171,7 @@ public class Login {
         //Make sure the hashmap is empty before adding any data to it (avoid duplicates)
         albumPermissions.clear();
 
-        dbc.executeSQL(
-                "SELECT album_id, type "
-                + "FROM permissions "
-                + "WHERE user_id = '" + userId + "'");
+        dbc.getAlbumPermissions(userId);
         //Loop through results and add to hashmap. album id is key, permission type string is value.
         for (int i = 0; i < dbc.getRowCount(); i++) {
             albumPermissions.put(Integer.parseInt(dbc.getRecord(i, 0).toString()), dbc.getRecord(i, 1).toString());
@@ -186,7 +181,7 @@ public class Login {
 
     public boolean changePassword(DBConnector pDbc, String pOldPassword, String pNewPassword) {
 
-        int updatedRows = pDbc.updateSQL("update users set password = '" + pNewPassword + "' where username='" + getUsername() + "' and password='" + pOldPassword + "'");
+        int updatedRows = pDbc.changeUsersPassword(getUsername(), pOldPassword, pNewPassword);
 
         if (updatedRows > 0) {
             return true;

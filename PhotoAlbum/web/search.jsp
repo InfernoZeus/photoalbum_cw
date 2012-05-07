@@ -16,15 +16,7 @@
 
 //Use the LIKE function and search public albums to match photos with the search query
 //Subquery used to find photos which user has permissions on
-    dbConnector.executeSQL(
-            "SELECT p.src, p.title, p.id "
-            + "FROM photos p "
-            + "JOIN albums a ON p.album_id = a.id AND ("
-            + "  a.is_public = 1 "
-            + "  OR a.owner_id = " + login.getUserId() + " "
-            + "  OR EXISTS(SELECT 1 FROM permissions p WHERE p.album_id = a.id AND p.user_id = " + login.getUserId() + ")) "
-            + "WHERE UPPER(p.description) LIKE UPPER('%" + searchQuery + "%')"
-            + "OR UPPER(p.title) LIKE UPPER('%" + searchQuery + "%')");
+    dbConnector.searchWithPermissionCheck(searchQuery, login.getUserId());
 
     int photoCount = dbConnector.getRowCount();
 

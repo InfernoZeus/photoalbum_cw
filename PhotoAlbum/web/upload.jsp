@@ -15,8 +15,7 @@
     String albumId = request.getParameter("album_id");
 
 //Now check the album exists and is viewable.
-    dbConnector.executeSQL("SELECT 1 FROM albums a " + "WHERE id = " + albumId);
-    if (dbConnector.getRowCount() == 0) {
+    if (dbConnector.hasAlbum(albumId)) {
         util.errorRedirect("The specified album could not be found.", request, response);
         dbConnector.closeConnection();
         return;
@@ -25,21 +24,13 @@
 //All error checking has now been performed.
 
 //Select the general information about the album, including count of viewers
-    dbConnector.executeSQL(
-            "SELECT a.title, a.description, "
-            + "(SELECT COUNT(*) FROM permissions p WHERE p.album_id = a.id ) "
-            + "FROM albums a "
-            + "WHERE a.id = " + albumId);
+    dbConnector.getAlbumInfo(albumId);
 
     String albumTitle = dbConnector.getRecord(0, 0).toString();
     String albumDesc = dbConnector.getRecord(0, 1).toString();
     String userCount = dbConnector.getRecord(0, 2).toString();
 
-
-    dbConnector.executeSQL(
-            "SELECT p.src, p.title, p.id "
-            + "FROM photos p "
-            + "WHERE p.album_id = " + albumId);
+    dbConnector.getPhotosInAlbum(albumId);
 
     int photoCount = dbConnector.getRowCount();
 

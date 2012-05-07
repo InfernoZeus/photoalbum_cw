@@ -109,7 +109,7 @@ File size: <%= fileItem.getSize()%><br/><br/>
                 File saveTo = new File(dirName + nowTimeStamp + fileName);
                 tmp.renameTo(saveTo);
 
-                int result = dbConnector.updateSQL("INSERT INTO photos(title, description, src, album_id) " + "VALUES('" + title + "', '" + description + "', '" + nowTimeStamp + fileName + "'," + album_id + ")");
+                int result = dbConnector.addPhoto(title, description, nowTimeStamp + fileName, album_id);
 
                 if (result == 0) {
                     //If the rows affected was 0, an error occured during the insert statement.

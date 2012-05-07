@@ -8,17 +8,7 @@
 //This is then passed to the util bean which prints the Javascript arrays.
 //NB for convenience this function also displays private albums to a logged in user,
 //this was not asked for in the spec but I think it makes
-    dbConnector.executeSQL(
-            "SELECT p.src, a.title, p.album_id "
-            + "FROM photos p "
-            + "JOIN albums a ON p.album_id  = a.id AND ("
-            + "  a.is_public = 1 "
-            + "  OR a.owner_id = " + login.getUserId() + " "
-            + "  OR EXISTS(SELECT 1 FROM permissions pr WHERE pr.album_id = a.id AND pr.user_id = " + login.getUserId() + ")"
-            + ") "
-            + "WHERE (p.id = (SELECT p2.id FROM photos p2 WHERE p2.album_id = p.album_id ORDER BY p2.id LIMIT 1)) ");
-
-
+    dbConnector.getIndexCoverInfo(login.getUserId());
 
 %>
 <html>  

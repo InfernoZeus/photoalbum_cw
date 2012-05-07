@@ -21,8 +21,7 @@
     }
 
 //Check the photo actually exists.
-    dbConnector.executeSQL("SELECT 1 FROM photos WHERE id = " + photoId);
-    if (dbConnector.getRowCount() == 0) {
+    if (!dbConnector.hasPhoto(photoId)) {
         util.errorRedirect("The specified photo could not be found.", request, response);
         dbConnector.closeConnection();
         return;
@@ -40,11 +39,7 @@
     }
 
 //Select the photo's basic information and store in variables below.
-    dbConnector.executeSQL(
-            "SELECT p.src, p.title, p.description, a.title, a.id "
-            + "FROM photos p "
-            + "JOIN albums a ON p.album_id = a.id "
-            + "WHERE p.id = " + photoId);
+    dbConnector.getPhotoInfo(photoId);
 
     String photoSrc = dbConnector.getRecord(0, 0).toString();
     String photoTitle = dbConnector.getRecord(0, 1).toString();
@@ -72,7 +67,7 @@
             <%
                 // Execute only if the "Delete Image" button has been clicked
                 if ("DELETE IMAGE".equals(request.getParameter("delete")) && login.getUserId() == util.ADMIN_USER_ID) {
-                    int photosDeleted = dbConnector.updateSQL("DELETE FROM photos WHERE id = " + photoId);
+                    int photosDeleted = dbConnector.deletePhoto(photoId);
                     if (photosDeleted == 1) {
                         String realContextPath = getServletContext().getRealPath("/");
                         System.out.println("Real context: " + realContextPath);
@@ -102,7 +97,7 @@
         <p class="errorMsg"><%=errorMsg%></p>
         <%
             }//end if errorMsg
-        %>
+%>
         <h1><%=photoTitle%></h1>
         <h2><%=photoDesc%></h2>    
         <div id="mainArea" class="popup" style="width:600px; height: 600px;">
@@ -112,11 +107,7 @@
         </div>
         <%
             //Select all the comments for this photo
-            dbConnector.executeSQL(
-                    "SELECT c.comment, u.name "
-                    + "FROM comments c "
-                    + "JOIN users u ON c.user_id = u.id "
-                    + "WHERE c.photo_id = " + photoId);
+            dbConnector.getCommentsForPhoto(photoId);
 
             if (login.getUserId() == util.ADMIN_USER_ID) {
         %>
