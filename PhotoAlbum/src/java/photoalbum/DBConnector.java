@@ -212,9 +212,24 @@ public class DBConnector {
     	if (dbConnection == null)
     		return;
         try {
-            PreparedStatement stmt = dbConnection.prepareStatement("SELECT p.src, p.title, p.id FROM photos p JOIN albums a ON p.album_id = a.id WHERE UPPER(p.description) LIKE UPPER('%?%') OR UPPER(p.title) LIKE UPPER('%?%')");
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT p.src, p.title, p.id FROM photos p JOIN albums a ON p.album_id = a.id WHERE UPPER(p.description) LIKE UPPER('%' ? '%') OR UPPER(p.title) LIKE UPPER('%' ? '%')");
             stmt.setString(1, searchString);
             stmt.setString(2, searchString);
+            executeSQL(stmt);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+    
+    public void searchWithPermissionCheck(String searchString, int userId) {
+    	if (dbConnection == null)
+    		return;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT p.src, p.title, p.id FROM photos p JOIN albums a ON p.album_id = a.id AND (a.is_public = 1 OR a.owner_id = ? OR EXISTS(SELECT 1 FROM permissions p WHERE p.album_id = a.id AND p.user_id = ?)) WHERE UPPER(p.description) LIKE UPPER('%' ? '%') OR UPPER(p.title) LIKE UPPER('%' ? '%')");
+            stmt.setInt(1, userId);
+            stmt.setInt(2, userId);
+            stmt.setString(3, searchString);
+            stmt.setString(4, searchString);
             executeSQL(stmt);
         } catch (SQLException ex) {
             System.err.println(ex);
@@ -237,7 +252,7 @@ public class DBConnector {
     	if (dbConnection == null)
     		return 0;
         try {
-            PreparedStatement stmt = dbConnection.prepareStatement("INSERT INTO comments(photo_id, user_id, comment) VALUES('?','?','?')");
+            PreparedStatement stmt = dbConnection.prepareStatement("INSERT INTO comments(photo_id, user_id, comment) VALUES(?, ?, ?)");
             stmt.setString(1, photoId);
             stmt.setInt(2, userId);
             stmt.setString(3, commentText);
@@ -252,7 +267,7 @@ public class DBConnector {
     	if (dbConnection == null)
     		return 0;
         try {
-            PreparedStatement stmt = dbConnection.prepareStatement("INSERT INTO contact(issue_type,name,email,text) VALUES('?', '?', '?', '?')");
+            PreparedStatement stmt = dbConnection.prepareStatement("INSERT INTO contact(issue_type,name,email,text) VALUES(?, ?, ?, ?)");
             stmt.setString(1, issueType);
             stmt.setString(2, name);
             stmt.setString(3, email);
@@ -366,26 +381,11 @@ public class DBConnector {
         }
     }
     
-    public void searchWithPermissionCheck(String searchString, int userId) {
-    	if (dbConnection == null)
-    		return;
-        try {
-            PreparedStatement stmt = dbConnection.prepareStatement("SELECT p.src, p.title, p.id FROM photos p JOIN albums a ON p.album_id = a.id AND (a.is_public = 1 OR a.owner_id = ? OR EXISTS(SELECT 1 FROM permissions p WHERE p.album_id = a.id AND p.user_id = ?)) WHERE UPPER(p.description) LIKE UPPER('%?%') OR UPPER(p.title) LIKE UPPER('%?%')");
-            stmt.setInt(1, userId);
-            stmt.setInt(2, userId);
-            stmt.setString(3, searchString);
-            stmt.setString(4, searchString);
-            executeSQL(stmt);
-        } catch (SQLException ex) {
-            System.err.println(ex);
-        }
-    }
-    
     public int addPhoto(String title, String description, String srcName, String albumId) {
     	if (dbConnection == null)
     		return 0;
         try {
-            PreparedStatement stmt = dbConnection.prepareStatement("INSERT INTO photos(title, description, src, album_id) " + "VALUES('?', '?', '?', '?')");
+            PreparedStatement stmt = dbConnection.prepareStatement("INSERT INTO photos(title, description, src, album_id) " + "VALUES(?, ?, ?, ?)");
             stmt.setString(1, title);
             stmt.setString(2, description);
             stmt.setString(3, srcName);

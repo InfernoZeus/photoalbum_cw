@@ -25,6 +25,8 @@
 
     if (login.getAlbumPermission(albumId) == null) {
         util.errorRedirect("You do not have the appropriate permissions to make a comment.", request, response);
+        dbConnector.closeConnection();
+        return;
     }
 
 //Check against user permissions

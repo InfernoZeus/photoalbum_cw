@@ -14,7 +14,7 @@ public class Search extends HttpServlet {
         db.search(sub);
         String searchresults;
         try {
-            searchresults = (String) db.getRecord(1, 1);
+            searchresults = (String) db.getRecord(0, 1);
         } catch (IndexOutOfBoundsException e) {
             searchresults = "Nothing found...";
         }
