@@ -2,6 +2,9 @@
 <jsp:useBean id="dbConnector" class="photoalbum.DBConnector" scope="request" />
 <jsp:useBean id="login" class="photoalbum.Login" scope="session" />
 <jsp:useBean id="util" class="photoalbum.UtilBean" scope="request" />
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
+
 <%
 
 //Basic error checking. If the required parameters don't exist, cancel processing
@@ -13,6 +16,8 @@
 
 //Retrieve the query from the request's POST parameters.
     String searchQuery = util.cleanString(request.getParameter("searchquery"));
+ // hack to set the variable in the pagecontext so JSTL can access it
+   	pageContext.setAttribute("searchQuery", searchQuery);
 
 //Use the LIKE function and search public albums to match photos with the search query
 //Subquery used to find photos which user has permissions on
@@ -38,7 +43,7 @@
     </head>
     <body onload="onLoad()">
         <%@ include file="top.jsp" %>
-        <h1>Results for <i><%=searchQuery%></i></h1>
+        <h1>Results for <i> <c:out value="${searchQuery}"/> </i></h1>
         <h2><%=photoCount%> photo(s) found</h2>
         <% if (photoCount > 0) {%>
         <%@ include file="photoGrid.jsp" %>
