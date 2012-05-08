@@ -48,12 +48,16 @@
     String photoDesc = dbConnector.getRecord(0, 2).toString();
     String albumTitle = dbConnector.getRecord(0, 3).toString();
     int albumId = Integer.parseInt(dbConnector.getRecord(0, 4).toString());
+    
+	// hack to set the variable in the pagecontext so JSTL can access it
+  	pageContext.setAttribute("title", photoTitle);
+ 	pageContext.setAttribute("desc", photoDesc);
 
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
     <head>
-        <title>View Photo: <%=photoTitle%></title>
+        <title>View Photo: <c:out value="${title}"/> </title>
         <link type="text/css" rel="stylesheet" href="style.css" />
         <script type="text/javascript">
             function onLoad(){
@@ -100,8 +104,8 @@
         <%
             }//end if errorMsg
 %>
-        <h1><%=photoTitle%></h1>
-        <h2><%=photoDesc%></h2>    
+        <h1> <c:out value="${title}"/> </h1>
+        <h2> <c:out value="${desc}"/> </h2>    
         <div id="mainArea" class="popup" style="width:600px; height: 600px;">
             <div id="div0" class="popupDiv">
                 <img id="viewImage0" src="images/<%=photoSrc%>" />          
@@ -117,14 +121,15 @@
             <!--hidden field contains the id of the photo receiving a comment -->
             <input type="hidden" name="photo_id" value="<%=photoId%>"/>        
             <div class="center" style="padding:10px;"><input type="submit" name="delete" value="DELETE IMAGE"/></div>
-        </form>
-        <div id="commentArea">        
-            <%
-                }
+        </form>        
+            <%}%>
+        <div id="commentArea">
+        	<%
                 if (dbConnector.getRowCount() == 0) {
             %>
             <p>No comments</p>
-            <%            } else {
+            <%            
+            	} else {
             %>
             <ul id="comments">
                 <%//Loop through query results and display every comment selected 
