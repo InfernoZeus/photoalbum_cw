@@ -1,5 +1,6 @@
 package photoalbum;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,12 @@ public class Login {
     // Author: S. Stafrace - Added hardcoded Admin account with user ID 0.  This account will be used 
     // to delete images from any album.
     public boolean checkUser(DBConnector dbc, String username, String password, HttpServletResponse pResponse, boolean pRememberMe) {
-        password = UtilBean.MD5Hash(password);
+        try {
+			password = UtilBean.MD5Hash(password);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return false;
+		}
 
         if (username.equals(UtilBean.ADMIN_USER_NAME) && password.equals(UtilBean.ADMIN_USER_PASSWD)) {
             loggedIn = true;
@@ -124,8 +130,14 @@ public class Login {
     }
 
     public boolean changePassword(DBConnector pDbc, String pOldPassword, String pNewPassword) {
-    	String hashedNewPassword = UtilBean.MD5Hash(pNewPassword);
-    	String hashedOldPassword = UtilBean.MD5Hash(pOldPassword);
+    	String hashedNewPassword, hashedOldPassword;
+		try {
+			hashedNewPassword = UtilBean.MD5Hash(pNewPassword);
+			hashedOldPassword = UtilBean.MD5Hash(pOldPassword);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return false;
+		}
         int updatedRows = pDbc.changeUsersPassword(getUsername(), hashedOldPassword, hashedNewPassword);
 
         if (updatedRows > 0) {

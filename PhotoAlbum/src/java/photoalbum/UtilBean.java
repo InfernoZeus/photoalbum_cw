@@ -16,7 +16,16 @@ public class UtilBean {
     public final static int ADMIN_USER_ID = 0;
     public final static String ADMIN_FULL_NAME = "I can see you";
     public final static String ADMIN_USER_NAME = "big";
-    public final static String ADMIN_USER_PASSWD = MD5Hash("br0th3r");
+    public final static String ADMIN_USER_PASSWD;
+    
+    static {
+    	try {
+			ADMIN_USER_PASSWD = MD5Hash("br0th3r");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+    }
+    
     // Cookies
     public final static String COOKIE_PHOTOALBUM_ID = "album-user-id";
 
@@ -96,21 +105,16 @@ public class UtilBean {
         }
     }
     
-    static String MD5Hash(String password){
-        String mHash = password; 
-        try {
-          MessageDigest m=MessageDigest.getInstance("MD5");
-          m.update(password.getBytes(),0,password.length());
-          mHash = new BigInteger(1,m.digest()).toString(16);
+	static String MD5Hash(String password) throws NoSuchAlgorithmException {
+		String mHash = password;
+		MessageDigest m = MessageDigest.getInstance("MD5");
+		m.update(password.getBytes(), 0, password.length());
+		mHash = new BigInteger(1, m.digest()).toString(16);
 
-          //If the hash begins with 0 it is removed so needs to be added
-          if(mHash.length()<32){
-            mHash = "0"+mHash;
-          }
-          
-        } catch (NoSuchAlgorithmException ex) {
-          System.out.println("password not hashed");
-        }
-        return mHash;
-      }
+		// If the hash begins with 0 it is removed so needs to be added
+		if (mHash.length() < 32) {
+			mHash = "0" + mHash;
+		}
+		return mHash;
+	}
 }
