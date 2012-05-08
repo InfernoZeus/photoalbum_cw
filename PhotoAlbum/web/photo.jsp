@@ -28,6 +28,18 @@
         dbConnector.closeConnection();
         return;
     }
+    
+    //check the user has access to the photo
+    dbConnector.getAlbumIdFromPhotoId(photoId);
+    int albumId = Integer.valueOf(dbConnector.getRecord(0, 0).toString());
+    //check user has permission
+    
+    int userAccessLevel = dbConnector.userPermission(albumId,login.getUserId());
+    if (userAccessLevel== util.USER_NO_ACCESS) {
+        util.errorRedirect("You do not have the appropriate permissions to view this photo.", request, response);
+        dbConnector.closeConnection();
+        return;
+    }
 
 //All error checks have now been performed
 
@@ -47,7 +59,6 @@
     String photoTitle = dbConnector.getRecord(0, 1).toString();
     String photoDesc = dbConnector.getRecord(0, 2).toString();
     String albumTitle = dbConnector.getRecord(0, 3).toString();
-    int albumId = Integer.parseInt(dbConnector.getRecord(0, 4).toString());
     
 	// hack to set the variable in the pagecontext so JSTL can access it
   	pageContext.setAttribute("title", photoTitle);
@@ -85,10 +96,10 @@
                 window.opener.document.location.reload();
                 window.close(); 
             <% } else {
-                            util.errorRedirect("An error occurred whilst deleteing the image from the file system", request, response);
+                            util.errorRedirect("An error occurred whilst deleting the image from the file system", request, response);
                         }
                     } else {
-                        util.errorRedirect("An error occurred whilst deleteing the image from the database", request, response);
+                        util.errorRedirect("An error occurred whilst deleting the image from the database", request, response);
                     }
                 }
             %>
@@ -149,7 +160,7 @@
 
                 //Check user has permissions to comment on this album (by having permissions user is implicitly logged in)
                 //and if they do, display the comment box.
-                if (login.getAlbumPermission(albumId) != null) {
+                if(userAccessLevel==util.USER_WRITE_ACCESS){
             %>
             <form action="addComment.jsp" method="post">
                 <!--hidden field contains the id of the photo receiving a comment -->

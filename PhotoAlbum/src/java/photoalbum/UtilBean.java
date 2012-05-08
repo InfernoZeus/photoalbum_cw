@@ -20,6 +20,10 @@ public class UtilBean {
     // Cookies
     public final static String COOKIE_PHOTOALBUM_ID = "album-user-id";
 
+    public final static int USER_NO_ACCESS = 0;
+    public final static int USER_READ_ACCESS = 444;
+    public final static int USER_WRITE_ACCESS = 777;
+    
     public UtilBean() {
     }
 

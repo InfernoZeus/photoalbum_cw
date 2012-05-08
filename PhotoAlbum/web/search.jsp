@@ -21,7 +21,7 @@
 
 //Use the LIKE function and search public albums to match photos with the search query
 //Subquery used to find photos which user has permissions on
-    dbConnector.searchWithPermissionCheck(searchQuery, login.getUserId());
+    dbConnector.search(searchQuery, login.getUserId());
 
     int photoCount = dbConnector.getRowCount();
 

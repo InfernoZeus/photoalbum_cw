@@ -195,21 +195,8 @@ public class DBConnector {
             return 0;
         }
     }
-
-    void search(String searchString) {
-    	if (dbConnection == null)
-    		return;
-        try {
-            PreparedStatement stmt = dbConnection.prepareStatement("SELECT p.src, p.title, p.id FROM photos p JOIN albums a ON p.album_id = a.id WHERE UPPER(p.description) LIKE UPPER('%' ? '%') OR UPPER(p.title) LIKE UPPER('%' ? '%')");
-            stmt.setString(1, searchString);
-            stmt.setString(2, searchString);
-            executeSQL(stmt);
-        } catch (SQLException ex) {
-            System.err.println(ex);
-        }
-    }
     
-    public void searchWithPermissionCheck(String searchString, int userId) {
+    public void search(String searchString, int userId) {
     	if (dbConnection == null)
     		return;
         try {
@@ -384,4 +371,32 @@ public class DBConnector {
             return 0;
         }
     }
+    
+    public int userPermission(int albumId, int userId) {
+    	if (dbConnection == null)
+    		return 0;
+        try {
+            PreparedStatement stmt = dbConnection.prepareStatement("SELECT type FROM permissions where album_id = ? AND user_id = ? "
+                    + " UNION SELECT 777 FROM albums WHERE id = ? AND owner_id = ? "
+                    + " UNION SELECT 444 FROM albums WHERE id = ? AND is_public = 1;");
+            stmt.setInt(1, albumId);
+            stmt.setInt(2, userId);
+            stmt.setInt(3, albumId);
+            stmt.setInt(4, userId);
+            stmt.setInt(5, albumId);
+            
+            executeSQL(stmt);
+            int maxPermission=0;
+            for(int i=0; i<this.rowCount;i++){
+                if(Integer.valueOf(this.getRecord(i,0).toString())>maxPermission){
+                    maxPermission=Integer.valueOf(this.getRecord(i,0).toString());
+                }
+            }
+            return (maxPermission);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+            return 0;
+        }
+    }
+
 }

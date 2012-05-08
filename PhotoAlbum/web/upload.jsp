@@ -20,6 +20,13 @@
         dbConnector.closeConnection();
         return;
     }
+    
+    int userAccessLevel = dbConnector.userPermission(Integer.valueOf(albumId),login.getUserId());
+    if (userAccessLevel!= util.USER_WRITE_ACCESS) {
+        util.errorRedirect("You do not have the appropriate permissions to upload to this photo album.", request, response);
+        dbConnector.closeConnection();
+        return;
+    }
 
 //All error checking has now been performed.
 

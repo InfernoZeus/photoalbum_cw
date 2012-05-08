@@ -1,5 +1,6 @@
 <jsp:useBean id="dbConnector" class="photoalbum.DBConnector" scope="request" />
 <jsp:useBean id="util" class="photoalbum.UtilBean" scope="request" />
+<jsp:useBean id="login" class="photoalbum.Login" scope="session" />
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.io.*" %>
 <%@ page import="org.apache.commons.fileupload.*" %>
@@ -51,6 +52,13 @@ Field value: <%= fileItemTemp.getString()%><br/><br/>
         } else
             fileItem = fileItemTemp;
     }
+        
+   	int userAccessLevel = dbConnector.userPermission(Integer.valueOf(album_id),login.getUserId());
+   	if (userAccessLevel!= util.USER_WRITE_ACCESS) {
+       	util.errorRedirect("You do not have the appropriate permissions to upload to this photo album.", request, response);
+       	dbConnector.closeConnection();
+       	return;
+   	}
 
     if (fileItem != null) {
         String fileName = fileItem.getName();

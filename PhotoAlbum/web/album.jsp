@@ -21,6 +21,13 @@
         return;
     }
 
+    //check user has permission
+    if (dbConnector.userPermission(Integer.valueOf(albumId),login.getUserId()) == util.USER_NO_ACCESS) {
+        util.errorRedirect("You do not have access to view this album.", request, response);
+        dbConnector.closeConnection();
+        return;
+    }
+
 //All error checking has now been performed.
 
 //Select the general information about the album, including count of viewers

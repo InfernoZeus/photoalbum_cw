@@ -23,11 +23,12 @@
     dbConnector.getAlbumIdFromPhotoId(photoId);
     int albumId = Integer.parseInt(dbConnector.getRecord(0, 0).toString());
 
-    if (login.getAlbumPermission(albumId) == null) {
-        util.errorRedirect("You do not have the appropriate permissions to make a comment.", request, response);
-        dbConnector.closeConnection();
-        return;
-    }
+	int userAccessLevel = dbConnector.userPermission(Integer.valueOf(albumId),login.getUserId());
+	if (userAccessLevel!= util.USER_WRITE_ACCESS) {
+		util.errorRedirect("You do not have the appropriate permissions to make a comment.", request, response);
+		dbConnector.closeConnection();
+		return;
+	}
 
 //Check against user permissions
 
