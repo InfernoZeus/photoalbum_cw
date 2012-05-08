@@ -3,6 +3,8 @@
 <jsp:useBean id="util" class="photoalbum.UtilBean" scope="request" />
 <%@ page import="java.io.File" %>
 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+
 <%
 
 //Basic error checking. If the required parameters don't exist, cancel processing
@@ -126,8 +128,15 @@
             %>
             <ul id="comments">
                 <%//Loop through query results and display every comment selected 
-                    for (int i = 0; i < dbConnector.getRowCount(); i++) {%>
-                <li><p><b><%=dbConnector.getRecord(i, 1)%></b>: <%=dbConnector.getRecord(i, 0)%></p></li>     
+                    for (int i = 0; i < dbConnector.getRowCount(); i++) {
+                    	Object name = dbConnector.getRecord(i, 1);
+                    	Object text = dbConnector.getRecord(i, 0);
+                    	// hack to set the variable in the pagecontext so JSTL can access it
+                   	  	pageContext.setAttribute("name",name);
+                   	 	pageContext.setAttribute("text",text);
+
+                    %>
+                <li><p><b><c:out value="${name}"/></b>: <c:out value="${text}"/> </p></li>
                 <% } //end for %>
             </ul>
             <%
