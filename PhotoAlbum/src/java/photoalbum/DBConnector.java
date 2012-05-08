@@ -169,18 +169,6 @@ public class DBConnector {
         }
     }
 
-    void retrieveUserName(int pUserId) {
-    	if (dbConnection == null)
-    		return;
-        try {
-            PreparedStatement stmt = dbConnection.prepareStatement("SELECT username FROM users WHERE id = ?");
-            stmt.setInt(1, pUserId);
-            executeSQL(stmt);
-        } catch (SQLException ex) {
-            System.err.println(ex);
-        }
-    }
-
     void getAlbumPermissions(int userId) {
     	if (dbConnection == null)
     		return;

@@ -217,7 +217,7 @@ DROP TABLE IF EXISTS `photo_album`.`users`;
 CREATE TABLE  `photo_album`.`users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
-  `password` varchar(20) NOT NULL,
+  `password` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
@@ -228,9 +228,9 @@ CREATE TABLE  `photo_album`.`users` (
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 LOCK TABLES `users` WRITE;
-INSERT INTO `photo_album`.`users` VALUES  (1,'firstuser','apassword','Mark Brown'),
- (2,'seconduser','bpassword','John Smith'),
- (3,'thirduser','cpassword','Joe Black');
+INSERT INTO `photo_album`.`users` VALUES  (1,'firstuser','04f0cef3e4796f6967fd5bae6e2c9113','Mark Brown'),
+ (2,'seconduser','d4865a8d699a70cf0beced66bc1d8036','John Smith'),
+ (3,'thirduser','71fc0987be72fc4c5068383838d2e7a8','Joe Black');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 

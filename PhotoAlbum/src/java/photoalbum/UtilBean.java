@@ -1,6 +1,10 @@
 package photoalbum;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,13 +16,9 @@ public class UtilBean {
     public final static int ADMIN_USER_ID = 0;
     public final static String ADMIN_FULL_NAME = "I can see you";
     public final static String ADMIN_USER_NAME = "big";
-    public final static String ADMIN_USER_PASSWD = "br0th3r";
+    public final static String ADMIN_USER_PASSWD = MD5Hash("br0th3r");
     // Cookies
     public final static String COOKIE_PHOTOALBUM_ID = "album-user-id";
-    public final static String COOKIE_PHOTOALBUM_ACC_TYPE = "album-account-type";
-    public final static String ACC_TYPE_SUPER = "super-user";
-    public final static String ACC_TYPE_NORMAL = "normal-user";
-    public final static String COOKIE_PHOTOALBUM_PREFIX = "user-id-";
 
     public UtilBean() {
     }
@@ -46,9 +46,9 @@ public class UtilBean {
 
     }
 
-    public String cleanString(String str) {
-        return str;
-    }
+	public String cleanString(String str) {
+		return str;
+	}
 
     //This function takes a comma-seperated list of parameters which the page requires,
     //and a matching list stating whether these parameters can be empty strings (0 = cannot be empty), as well as
@@ -91,4 +91,22 @@ public class UtilBean {
         } catch (IOException e) {
         }
     }
+    
+    static String MD5Hash(String password){
+        String mHash = password; 
+        try {
+          MessageDigest m=MessageDigest.getInstance("MD5");
+          m.update(password.getBytes(),0,password.length());
+          mHash = new BigInteger(1,m.digest()).toString(16);
+
+          //If the hash begins with 0 it is removed so needs to be added
+          if(mHash.length()<32){
+            mHash = "0"+mHash;
+          }
+          
+        } catch (NoSuchAlgorithmException ex) {
+          System.out.println("password not hashed");
+        }
+        return mHash;
+      }
 }
